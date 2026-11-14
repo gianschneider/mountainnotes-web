@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Privacy – MountainNotes</title>
+  <style>
+    :root { --fg: #1d241f; --bg: #f7f8f6; --muted: #5b665e; --accent: #2e5e3e; }
+    @media (prefers-color-scheme: dark) { :root { --fg: #e8ece9; --bg: #121614; --muted: #a3ada6; --accent: #8fc29f; } }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 -apple-system, system-ui, sans-serif; }
+    main { max-width: 680px; margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 16px 48px; }
+    h1 { font-size: 1.6rem; margin: 0 0 4px; }
+    h2 { font-size: 1.1rem; margin: 28px 0 6px; color: var(--accent); }
+    p, li { margin: 6px 0; }
+    .muted { color: var(--muted); font-size: .9rem; }
+    a { color: var(--accent); }
+    .back { display: inline-block; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+<main>
+  <a class="back" href="./">← Back to MountainNotes</a>
+  <h1>Privacy notice</h1>
+  <p class="muted">MountainNotes web app, beta · as of 14 November 2026</p>
+
+  <h2>Who is responsible</h2>
+  <p>MountainNotes is a student project by Gian Schneider (module <em>Advanced Spatial Methods</em>, FHNW, Switzerland).
+    It is a beta for invited testers, not a commercial service. Questions, requests for information or deletion:
+    <a href="https://github.com/gianschneider/mountainnotes-web/issues">github.com/gianschneider/mountainnotes-web/issues</a>.</p>
+
+  <h2>In short</h2>
+  <ul>
+    <li>Your position and your routes are <strong>never stored on the server</strong>. Whether you stand at a note is checked on your phone.</li>
+    <li>No advertising, no analytics, no tracking, no cookies.</li>
+    <li>You can delete your account with all your notes at any time in the app (Profile → Delete account).</li>
+  </ul>
+
+  <h2>What the server stores</h2>
+  <ul>
+    <li><strong>Account:</strong> username and password (only as a secure hash, never in plain text).</li>
+    <li><strong>Your notes:</strong> text, optional photo, the location of the note, validity period and who may read it.
+      Photos are scaled down and all metadata (EXIF: GPS position, time, camera) is removed on your phone before upload.</li>
+    <li><strong>Groups:</strong> groups you create or join, and join requests.</li>
+    <li><strong>Openings:</strong> which note you opened and when. The author of a note can see who opened it.</li>
+  </ul>
+
+  <h2>What the server sees but does not keep</h2>
+  <p>To load the notes around you, the app asks the server for an area of about 40 × 40 km around your position,
+    <strong>rounded to about 1 km</strong>. Like every web server, the server writes a technical log (time, IP address,
+    requested address). The log is not evaluated and is overwritten automatically when it is full.</p>
+
+  <h2>On your phone</h2>
+  <p>Notes meant for you, notes waiting for upload and photos are stored in your browser so that the app works offline.
+    The content is encrypted with a key that never leaves your device. Saved map areas are stored unencrypted (public map data).</p>
+
+  <h2>Other services</h2>
+  <ul>
+    <li><strong>Map:</strong> map tiles come from swisstopo (Federal Office of Topography, <code>vectortiles.geo.admin.ch</code>).
+      swisstopo sees your IP address and the map area you look at, as with any web map.</li>
+    <li><strong>Hosting:</strong> the server is a Raspberry Pi in Switzerland. It is reached through Tailscale Funnel
+      (Tailscale Inc., USA); the connection is encrypted up to the Pi, so Tailscale cannot read it.</li>
+  </ul>
+
+  <h2>How long data is kept</h2>
+  <p>Notes disappear after their end date. Your account and notes stay until you delete them, or until the beta ends.
+    There is no backup: during the beta, data can be lost.</p>
+
+  <h2>Your rights</h2>
+  <p>Under the Swiss Federal Act on Data Protection (FADP) you can ask what data is stored about you, have it corrected
+    or deleted. Most of it you can do yourself in the app; for anything else, use the contact above.</p>
+</main>
+</body>
+</html>

@@ -6,7 +6,15 @@
       "name": "app",
       "installMode": "prefetch",
       "resources": {
-        "files": ["/favicon.ico", "/index.html", "/manifest.webmanifest", "/*.css", "/*.js", "/maplibre/**"]
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/privacy.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js",
+          "/maplibre/**"
+        ]
       }
     },
     {
@@ -14,7 +22,12 @@
       "installMode": "prefetch",
       "updateMode": "prefetch",
       "resources": {
-        "files": ["/assets/**", "/leaflet/**", "/svg/**", "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+        "files": [
+          "/assets/**",
+          "/leaflet/**",
+          "/svg/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
       }
     }
   ]

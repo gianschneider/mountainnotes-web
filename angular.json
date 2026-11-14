@@ -33,6 +33,11 @@
                 "output": "/"
               },
               {
+                "glob": "privacy.html",
+                "input": "src",
+                "output": "/"
+              },
+              {
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"

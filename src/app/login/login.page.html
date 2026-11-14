@@ -36,4 +36,12 @@
       }
     </ion-button>
   </form>
+
+  <p class="privacy">
+    @if (mode() === 'register') {
+      By creating an account you accept the <a href="privacy.html">privacy notice</a>.
+    } @else {
+      <a href="privacy.html">Privacy notice</a>
+    }
+  </p>
 </ion-content>
