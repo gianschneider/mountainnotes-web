@@ -18,7 +18,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules), withComponentInputBinding()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     // Offline start: the service worker caches the app shell (not the API; notes have their own offline store).
-    provideServiceWorker('ngsw-worker.js', { enabled: !isDevMode(), registrationStrategy: 'registerWhenStable:30000' }),
+    provideServiceWorker('ngsw-worker.js', { enabled: !isDevMode(), registrationStrategy: 'registerImmediately' }),
     // Restore API URL and session before the first route guard runs.
     provideAppInitializer(async () => {
       const api = inject(ApiService);

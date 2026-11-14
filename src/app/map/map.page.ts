@@ -297,6 +297,19 @@ export class MapPage implements OnDestroy {
     this.map?.zoomOut();
   }
 
+  /** Tap on the location error: how to allow location access for the web app. */
+  async locationHelp() {
+    if (!this.location.denied()) return;
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const how = ios
+      ? 'iPhone: Settings → Privacy & Security → Location Services → turn it on, then "Safari Websites" → "While Using the App". '
+        + 'Then close MountainNotes completely and open it again.'
+      : 'Android: tap the lock icon or ⋮ → Site settings → Location → Allow (and turn on location in the quick settings). '
+        + 'Then open MountainNotes again.';
+    await this.ui.info('Allow location access', `MountainNotes needs your position to show nearby notes and to open them on the spot. ${how}`);
+    await this.location.start();   // try again (e.g. the setting was changed meanwhile)
+  }
+
   async openLegend() {
     const sheet = await this.modals.create({ component: LegendComponent, breakpoints: [0, 0.9], initialBreakpoint: 0.9 });
     await sheet.present();

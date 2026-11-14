@@ -16,7 +16,6 @@
   </ion-list>
 
   <div class="photo">
-    <input #fileInput type="file" accept="image/*" hidden (change)="onPhotoPicked($event)" />
     @if (photoUrl(); as url) {
       <div class="photo-preview">
         <img [src]="url" alt="Photo of the note" />
@@ -25,14 +24,20 @@
         </ion-button>
       </div>
     } @else {
-      <ion-button expand="block" fill="outline" (click)="addPhoto()" [disabled]="photoBusy()">
-        @if (photoBusy()) {
-          <ion-spinner slot="start" name="crescent" />
-        } @else {
-          <ion-icon slot="start" name="camera-outline" />
-        }
-        Add photo
-      </ion-button>
+      <!-- The finger taps the (invisible) file input itself: no script opens the picker, so Safari cannot block it.
+           iOS and Android then offer "Take photo" and the photo library. -->
+      <div class="photo-pick">
+        <ion-button expand="block" fill="outline" [disabled]="photoBusy()">
+          @if (photoBusy()) {
+            <ion-spinner slot="start" name="crescent" />
+          } @else {
+            <ion-icon slot="start" name="camera-outline" />
+          }
+          Add photo
+        </ion-button>
+        <input type="file" accept="image/*" aria-label="Add photo" [disabled]="photoBusy()"
+          (click)="$any($event.target).value = ''" (change)="onPhotoPicked($event)" />
+      </div>
     }
   </div>
 

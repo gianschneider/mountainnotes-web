@@ -14,6 +14,7 @@ import { Ui } from '../core/ui';
 import { NotesService } from '../core/notes.service';
 import { UnlockService } from '../core/unlock.service';
 
+import { APP_VERSION } from '../core/version';
 @Component({
   selector: 'app-profile',
   templateUrl: 'profile.page.html',
@@ -23,6 +24,7 @@ import { UnlockService } from '../core/unlock.service';
   ],
 })
 export class ProfilePage {
+  readonly version = APP_VERSION;
   readonly auth = inject(AuthService);
   readonly api = inject(ApiService);
   private router = inject(Router);

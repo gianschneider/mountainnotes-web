@@ -56,6 +56,12 @@ export class Ui {
     return role === 'confirm' ? data.values : null;
   }
 
+  async info(header: string, message: string) {
+    const alert = await this.alerts.create({ header, message, buttons: ['OK'] });
+    await alert.present();
+    await alert.onDidDismiss();
+  }
+
   async confirm(header: string, message: string, okText: string, destructive = false): Promise<boolean> {
     const alert = await this.alerts.create({
       header,

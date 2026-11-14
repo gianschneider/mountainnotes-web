@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
@@ -125,18 +125,6 @@ export class NoteFormComponent implements OnInit {
 
   constructor() {
     addIcons({ cameraOutline, closeCircle });
-  }
-
-  private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
-
-  /**
-   * Web app: open the phone's own picker (iOS and Android offer "Take photo" and the photo library there).
-   * The click must happen right in the tap handler, otherwise browsers (Safari above all) block the picker.
-   */
-  addPhoto() {
-    const input = this.fileInput().nativeElement;
-    input.value = '';   // picking the same file again must fire "change" too
-    input.click();
   }
 
   /** The photo is resized and stripped of EXIF (incl. GPS) before it is stored. */

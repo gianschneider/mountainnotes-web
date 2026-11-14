@@ -13,7 +13,7 @@
   <div class="top">
     <div class="status">
       @if (location.error(); as err) {
-        <ion-chip color="danger">{{ err }}</ion-chip>
+        <ion-chip [color]="location.denied() ? 'danger' : 'warning'" (click)="locationHelp()">{{ err }}</ion-chip>
       } @else if (location.position(); as p) {
         <ion-chip>
           <ion-icon name="navigate" />

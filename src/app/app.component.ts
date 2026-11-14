@@ -5,6 +5,7 @@ import { GroupsService } from './core/groups.service';
 import { AuthService } from './core/auth.service';
 import { OutboxService } from './core/outbox.service';
 import { UnlockService } from './core/unlock.service';
+import { AppUpdateService } from './core/app-update.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent {
   private auth = inject(AuthService);
   private outbox = inject(OutboxService);   // created at startup so pending notes upload in the background
   private unlock = inject(UnlockService);   // created at startup so proximity alerts work on every tab
+  private updates = inject(AppUpdateService);
 
   constructor() {
     // Invite links: https://<web app>/?join=<CODE>. The groups page performs the join (after login if needed).
@@ -26,6 +28,7 @@ export class AppComponent {
       this.groups.pendingJoin.set(code);
       setTimeout(() => this.router.navigateByUrl(this.auth.isLoggedIn() ? '/tabs/groups' : '/login'));
     }
+    this.updates.start();
     // Ask the browser not to evict notes, outbox and offline map (granted for installed web apps).
     navigator.storage?.persist?.().catch(() => {});
   }

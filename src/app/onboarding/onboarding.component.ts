@@ -86,6 +86,7 @@ function installStep(): Step {
     : 'In Chrome, tap the menu ⋮ and then "Add to Home screen" or "Install app".';
   return {
     icon: 'phone-portrait-outline', title: 'Add it to your home screen',
-    text: `${how} MountainNotes then starts like an app, works offline and the browser keeps your saved notes and maps.`,
+    text: `${how} MountainNotes then starts like an app, works offline and keeps your saved notes and maps. `
+      + 'Open it from the home screen and log in there once more.',
   };
 }
