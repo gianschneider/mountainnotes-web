@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile" text="Profile" />
+    </ion-buttons>
+    <ion-title>My notes</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="view()" (ionChange)="view.set($any($event.detail.value))">
+      <ion-segment-button value="placed"><ion-label>Placed</ion-label></ion-segment-button>
+      <ion-segment-button value="found"><ion-label>Found</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (n of view() === 'placed' ? placed() : found(); track n.id) {
+      <ion-item [button]="n.synced" [detail]="false" (click)="open(n)">
+        <div slot="start" class="note-pin note-pin--{{ n.kind }} list-pin"><span>{{ glyph[n.kind] }}</span></div>
+        <ion-label>
+          <h2>{{ n.body }}</h2>
+          <p>{{ n.meta }}</p>
+        </ion-label>
+        <ion-note slot="end">{{ n.date | date: 'dd.MM.yy' }}</ion-note>
+      </ion-item>
+    } @empty {
+      <ion-item lines="none">
+        <ion-note class="ion-text-wrap">
+          @if (view() === 'placed') {
+            You have not placed a note yet. Tap «+» on the map.
+          } @else {
+            You have not found a note yet. «Nearby» shows where they are.
+          }
+        </ion-note>
+      </ion-item>
+    }
+  </ion-list>
+  <p class="hint">Shows what is stored on this phone (the loaded areas).</p>
+</ion-content>

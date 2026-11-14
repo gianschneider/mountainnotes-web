@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile" text="Profile" />
+    </ion-buttons>
+    <ion-title>Administration</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="view()" (ionChange)="setView($any($event.detail.value))">
+      <ion-segment-button value="notes"><ion-label>Notes</ion-label></ion-segment-button>
+      <ion-segment-button value="users"><ion-label>Users</ion-label></ion-segment-button>
+      <ion-segment-button value="groups"><ion-label>Groups</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="load($any($event))">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  @switch (view()) {
+    @case ('notes') {
+      <ion-searchbar placeholder="Text or author" [debounce]="300" (ionInput)="search($any($event).detail.value ?? '')" />
+      <ion-list>
+        @for (note of notes(); track note.id) {
+          <ion-item>
+            <ion-label class="ion-text-wrap">
+              <p class="body">{{ note.body }}</p>
+              <ion-note>
+                {{ note.author }}@if (note.authorIsTest) { (Test)} → {{ audienceText(note) }} · {{ note.createdAt | date: 'dd.MM.yy' }}
+                · {{ note.openCount }}× opened
+              </ion-note>
+            </ion-label>
+            <ion-button slot="end" fill="clear" color="danger" (click)="deleteNote(note)" aria-label="Delete">
+              <ion-icon slot="icon-only" name="trash-outline" />
+            </ion-button>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none"><ion-note>No notes.</ion-note></ion-item>
+        }
+      </ion-list>
+    }
+    @case ('users') {
+      <ion-list>
+        @for (user of users(); track user.id) {
+          <ion-item>
+            <ion-label>
+              <h2>{{ user.username }} @if (user.id === me()) { <ion-note>(you)</ion-note> }</h2>
+              <p>{{ user.noteCount }} notes · {{ user.groupCount }} groups · since {{ user.createdAt | date: 'dd.MM.yy' }}</p>
+            </ion-label>
+            @if (user.role === 'admin') {
+              <ion-badge slot="end" color="primary">Admin</ion-badge>
+            }
+            @if (user.isTest) {
+              <ion-badge slot="end" color="warning">Test</ion-badge>
+            }
+            <ion-button slot="end" fill="clear" [color]="user.isTest ? 'warning' : 'medium'" (click)="toggleTest(user)"
+              [attr.aria-label]="user.isTest ? 'No longer a test account' : 'Mark as test account'">
+              <ion-icon slot="icon-only" name="flask-outline" />
+            </ion-button>
+            @if (user.id !== me()) {
+              <ion-button slot="end" fill="clear" (click)="toggleRole(user)"
+                [attr.aria-label]="user.role === 'admin' ? 'Remove admin role' : 'Make admin'">
+                <ion-icon slot="icon-only" [name]="user.role === 'admin' ? 'shield-checkmark' : 'shield-outline'" />
+              </ion-button>
+              <ion-button slot="end" fill="clear" color="danger" (click)="deleteUser(user)" aria-label="Delete">
+                <ion-icon slot="icon-only" name="trash-outline" />
+              </ion-button>
+            }
+          </ion-item>
+        }
+      </ion-list>
+    }
+    @case ('groups') {
+      <ion-list>
+        @for (group of groups(); track group.id) {
+          <ion-item [routerLink]="['/tabs/groups', group.id]" [detail]="false">
+            <ion-label>
+              <h2>{{ group.name }}</h2>
+              <p>
+                {{ group.memberCount }} members · {{ group.noteCount }} notes
+                · {{ group.joinPolicy === 'open' ? 'open' : 'on request' }}
+              </p>
+            </ion-label>
+            <ion-button slot="end" fill="clear" color="danger" (click)="$event.stopPropagation(); deleteGroup(group)"
+              aria-label="Delete">
+              <ion-icon slot="icon-only" name="trash-outline" />
+            </ion-button>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none"><ion-note>No groups.</ion-note></ion-item>
+        }
+      </ion-list>
+    }
+  }
+</ion-content>

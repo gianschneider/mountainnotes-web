@@ -1,0 +1,90 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* Always light: better readable outdoors in the sun (decision 04.11.2026) */
+
+/* Note markers on the map (Leaflet DivIcon, outside Angular view encapsulation) */
+.note-pin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  background: var(--ion-color-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    transform: rotate(45deg);
+    font-size: 13px;
+    color: #fff;
+    line-height: 1;
+  }
+}
+.note-pin--mine { background: var(--ion-color-primary); }
+.note-pin--opened { background: var(--ion-color-success); }
+.note-pin--unlockable { background: var(--ion-color-secondary); animation: note-pulse 1.2s ease-in-out infinite; }
+.note-pin--locked { background: var(--ion-color-dark); }
+.note-pin--future { background: var(--ion-color-medium); }
+.note-pin--pending { background: var(--ion-color-warning); }
+.note-pin--failed { background: var(--ion-color-danger); }
+
+@keyframes note-pulse {
+  50% { box-shadow: 0 0 0 8px rgba(var(--ion-color-secondary-rgb), 0.4); }
+}
+
+// Destructive alert buttons (delete note, delete account) in red
+ion-alert .alert-button.alert-button-danger {
+  color: var(--ion-color-danger);
+}
+
+// Username next to my position on the map (Leaflet tooltip, outside the component styles)
+.leaflet-tooltip.me-label {
+  padding: 1px 6px;
+  border: none;
+  border-radius: 8px;
+  background: #3880ff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  &::before {
+    display: none;                          // no arrow
+  }
+}

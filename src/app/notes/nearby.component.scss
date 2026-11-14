@@ -1,0 +1,27 @@
+.list-pin {
+  margin: 0 16px 0 4px;
+}
+
+.direction {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 6px;
+  text-align: right;
+
+  ion-icon {
+    transition: transform 0.2s linear;
+    grid-row: span 2;
+    font-size: 22px;
+    color: var(--ion-color-primary);
+  }
+
+  ion-note {
+    font-size: 0.8em;
+  }
+}
+
+.has-photo {
+  vertical-align: -2px;
+  color: var(--ion-color-medium);
+}

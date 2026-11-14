@@ -1,0 +1,114 @@
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+// Floating controls above the full-screen map (Leaflet panes use z-index up to 700)
+.top {
+  position: absolute;
+  top: calc(8px + var(--ion-safe-area-top, 0px));
+  left: 8px;
+  right: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;                       // let the map get drags between the chips
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.status {
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  pointer-events: none;
+
+  ion-chip {
+    pointer-events: auto;
+    background: var(--ion-background-color, #fff);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .help {
+    pointer-events: auto;
+    margin: 4px 0 0 auto;
+  }
+}
+
+.load-area {
+  --box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  text-transform: none;
+}
+
+.nearby-button {
+  position: absolute;
+  left: 12px;
+  bottom: 28px;
+  z-index: 1000;
+  margin: 0;
+  height: 44px;
+  --box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  text-transform: none;
+
+  ion-badge {
+    margin-left: 8px;
+  }
+}
+
+// Zoom in the middle of the right edge, away from the note buttons at the bottom
+.zoom-buttons {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-buttons {
+  position: absolute;
+  right: 12px;
+  bottom: 28px;                               // above the data attribution
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.place-panel {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: calc(32px + var(--ion-safe-area-bottom, 0px)); // keep the data attribution below visible
+  z-index: 1000;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--ion-background-color, #fff);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  p {
+    margin: 0 0 6px;
+  }
+
+  .meta {
+    color: var(--ion-color-medium);
+    font-size: 0.9em;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+
+    ion-button {
+      flex: 1;
+    }
+  }
+}

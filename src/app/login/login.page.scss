@@ -1,0 +1,28 @@
+.brand {
+  text-align: center;
+  margin: calc(32px + var(--ion-safe-area-top, 0px)) 0 8px;
+
+  img {
+    width: 120px;
+    height: 120px;
+  }
+
+  h1 {
+    margin: 8px 0 4px;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+  }
+
+  p {
+    margin: 0 24px;
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-segment {
+  margin: 24px 0 16px;
+}
+
+ion-button {
+  margin-top: 16px;
+}

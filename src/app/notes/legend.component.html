@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Map</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>Show on the map</ion-list-header>
+    @for (g of groups; track g.group) {
+      <ion-item lines="none">
+        <ion-toggle [checked]="!filter.hidden().has(g.group)" (ionChange)="filter.set(g.group, $event.detail.checked)">
+          {{ g.label }}
+        </ion-toggle>
+      </ion-item>
+    }
+    <ion-item lines="none">
+      <ion-toggle [checked]="filter.zones()" (ionChange)="filter.setZones($event.detail.checked)">
+        <ion-label class="ion-text-wrap">
+          Building zones <span class="zone-swatch"></span>
+          <p>No notes can be placed here</p>
+        </ion-label>
+      </ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Legend</ion-list-header>
+    @for (kind of kinds; track kind) {
+      <ion-item lines="none">
+        <div slot="start" class="note-pin note-pin--{{ kind }} legend-pin"><span>{{ glyph[kind] }}</span></div>
+        <ion-label>{{ label[kind] }}</ion-label>
+      </ion-item>
+    }
+    <ion-item lines="none">
+      <div slot="start" class="me"><span></span></div>
+      <ion-label class="ion-text-wrap">You, with a circle for the GNSS accuracy</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>How to open a note</ion-list-header>
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap">
+        <p>From {{ proximity }} m the phone vibrates. Get within {{ radius }} m of the note and stand still for a moment
+          ({{ fixes }} fixes in a row). GNSS must be accurate to {{ accuracy }} m. This also works without network.</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

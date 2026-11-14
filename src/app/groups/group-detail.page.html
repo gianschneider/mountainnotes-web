@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/groups" text="Groups" />
+    </ion-buttons>
+    <ion-title>{{ group()?.name ?? 'Group' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (group(); as g) {
+    <div class="invite ion-padding">
+      <ion-note>Invite code</ion-note>
+      <div class="code">{{ code() }}</div>
+      <ion-button (click)="share()">
+        <ion-icon slot="start" name="share-outline" /> Share invitation
+      </ion-button>
+      <ion-note class="hint">With the code or link you join the group without approval.</ion-note>
+    </div>
+
+    @if (canManage()) {
+      <ion-list>
+        <ion-list-header>Settings</ion-list-header>
+        <ion-item>
+          <ion-toggle [checked]="g.joinPolicy === 'approval'" (ionChange)="setApproval($event.detail.checked)">
+            Join only with approval
+          </ion-toggle>
+        </ion-item>
+      </ion-list>
+
+      @if (g.requests.length) {
+        <ion-list>
+          <ion-list-header>Join requests</ion-list-header>
+          @for (request of g.requests; track request.id) {
+            <ion-item>
+              <ion-label>{{ request.username }}</ion-label>
+              <ion-button slot="end" fill="clear" color="success" (click)="approve(request)" aria-label="Approve">
+                <ion-icon slot="icon-only" name="checkmark" />
+              </ion-button>
+              <ion-button slot="end" fill="clear" color="danger" (click)="reject(request)" aria-label="Decline">
+                <ion-icon slot="icon-only" name="close" />
+              </ion-button>
+            </ion-item>
+          }
+        </ion-list>
+      }
+    }
+
+    <ion-list>
+      <ion-list-header>{{ g.memberCount }} {{ g.memberCount === 1 ? 'member' : 'members' }}</ion-list-header>
+      @for (member of g.members; track member.id) {
+        <ion-item>
+          <ion-label>
+            {{ member.username }}
+            @if (member.id === me()) { <ion-note>(you)</ion-note> }
+          </ion-label>
+          @if (member.role === 'admin') {
+            <ion-badge slot="end" color="medium">Admin</ion-badge>
+          }
+          @if (canManage() && member.id !== me()) {
+            <ion-button slot="end" fill="clear" color="danger" (click)="remove(member)" aria-label="Remove">
+              <ion-icon slot="icon-only" name="person-remove-outline" />
+            </ion-button>
+          }
+        </ion-item>
+      }
+    </ion-list>
+
+    <div class="ion-padding">
+      @if (g.role) {
+        <ion-button expand="block" fill="outline" color="danger" (click)="leave()">
+          <ion-icon slot="start" name="exit-outline" /> Leave group
+        </ion-button>
+      }
+      @if (canManage()) {
+        <ion-button expand="block" color="danger" (click)="deleteGroup()">
+          <ion-icon slot="start" name="trash-outline" /> Delete group
+        </ion-button>
+      }
+    </div>
+  } @else if (error(); as err) {
+    <ion-text color="danger"><p class="ion-padding">{{ err }}</p></ion-text>
+  } @else {
+    <div class="ion-padding ion-text-center"><ion-spinner /></div>
+  }
+</ion-content>

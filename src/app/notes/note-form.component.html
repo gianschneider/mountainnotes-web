@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ existing ? 'Edit note' : 'New note' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-textarea label="Text" labelPlacement="stacked" name="body" [(ngModel)]="body" [autoGrow]="true" [rows]="4"
+        [counter]="true" [maxlength]="2000" placeholder="What would you like to leave here?" />
+    </ion-item>
+  </ion-list>
+
+  <div class="photo">
+    @if (photoUrl(); as url) {
+      <div class="photo-preview">
+        <img [src]="url" alt="Photo of the note" />
+        <ion-button fill="clear" color="light" (click)="removePhoto()" aria-label="Remove photo">
+          <ion-icon slot="icon-only" name="close-circle" />
+        </ion-button>
+      </div>
+    } @else {
+      <ion-button expand="block" fill="outline" (click)="addPhoto()" [disabled]="photoBusy()">
+        @if (photoBusy()) {
+          <ion-spinner slot="start" name="crescent" />
+        } @else {
+          <ion-icon slot="start" name="camera-outline" />
+        }
+        Add photo
+      </ion-button>
+    }
+  </div>
+
+  <ion-list>
+    <ion-list-header>For whom?</ion-list-header>
+    <ion-item lines="none">
+      <ion-segment [value]="audience()" (ionChange)="audience.set($any($event.detail.value))">
+        @for (option of audienceOptions(); track option.value) {
+          <ion-segment-button [value]="option.value" [disabled]="option.disabled">
+            <ion-label>{{ option.label }}</ion-label>
+          </ion-segment-button>
+        }
+      </ion-segment>
+    </ion-item>
+    @switch (audience()) {
+      @case ('group') {
+        <ion-item>
+          <ion-select label="Group" name="group" [(ngModel)]="groupId" interface="action-sheet" cancelText="Cancel">
+            @for (group of groups(); track group.id) {
+              <ion-select-option [value]="group.id">{{ group.name }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+      }
+      @case ('user') {
+        <ion-item>
+          <ion-input label="Username" labelPlacement="stacked" name="username" [(ngModel)]="username"
+            autocapitalize="off" (ionBlur)="checkUsername()" placeholder="exact name, e.g. anna" />
+        </ion-item>
+        @if (usernameHint(); as hint) {
+          <ion-item lines="none"><ion-note color="warning">{{ hint }}</ion-note></ion-item>
+        }
+      }
+      @case ('public') {
+        <ion-item lines="none">
+          <ion-note>All MountainNotes users can open the note on the spot.</ion-note>
+        </ion-item>
+      }
+    }
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Visible for how long?</ion-list-header>
+    <ion-item lines="none">
+      <ion-segment [value]="validity()" (ionChange)="setValidity($any($event.detail.value))">
+        @for (option of validityOptions; track option.value) {
+          <ion-segment-button [value]="option.value"><ion-label>{{ option.label }}</ion-label></ion-segment-button>
+        }
+      </ion-segment>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-toggle [checked]="validity() === 'custom'" (ionChange)="setCustom($event.detail.checked)">Custom dates</ion-toggle>
+    </ion-item>
+    @if (validity() === 'custom') {
+      <ion-item>
+        <ion-input label="Readable from" type="date" name="from" [(ngModel)]="from" [min]="existing ? undefined : minDate" />
+      </ion-item>
+      <ion-item>
+        <ion-input label="Visible until" type="date" name="until" [(ngModel)]="until" [min]="from || minDate" />
+      </ion-item>
+    }
+    <ion-item lines="none">
+      <ion-note>Readable {{ fromLabel() }}, visible until {{ untilLabel() }}</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Opens within</ion-list-header>
+    <ion-item lines="none">
+      <ion-segment [value]="radius()" (ionChange)="radius.set(+$any($event.detail.value))">
+        @for (r of radiusOptions; track r) {
+          <ion-segment-button [value]="r"><ion-label>{{ r }}&nbsp;m</ion-label></ion-segment-button>
+        }
+      </ion-segment>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-note>
+        @if (radius() <= 20) {
+          Very precise, e.g. a boulder. Needs good GNSS reception (open sky).
+        } @else if (radius() <= 50) {
+          For a specific spot, e.g. a trail junction or a viewpoint.
+        } @else {
+          For a larger target, e.g. a summit or a hut.
+        }
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Place</ion-list-header>
+    <ion-item lines="none">
+      <ion-note>
+        @if (existing) {
+          The place stays where the note was placed.
+        } @else {
+          {{ adjustM | number: '1.0-0' }}&nbsp;m moved from the GNSS fix · accuracy ±&nbsp;{{ gnss.accuracy | number: '1.0-0' }}&nbsp;m
+        }
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  @if (error(); as err) {
+    <ion-text color="danger"><p class="ion-padding-horizontal">{{ err }}</p></ion-text>
+  }
+  <div class="ion-padding">
+    <ion-button expand="block" size="large" (click)="save()">{{ existing ? 'Save changes' : 'Place note' }}</ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,17 @@
+<ion-content class="ion-padding">
+  @let step = steps[index()];
+  <div class="page">
+    <ion-button class="skip" fill="clear" color="medium" (click)="close()">Skip</ion-button>
+    <div class="icon"><ion-icon [name]="step.icon" /></div>
+    <h1>{{ step.title }}</h1>
+    <p>{{ step.text }}</p>
+    <div class="dots">
+      @for (s of steps; track s.title; let i = $index) {
+        <span [class.active]="i === index()" (click)="index.set(i)"></span>
+      }
+    </div>
+    <ion-button expand="block" (click)="next()">
+      {{ index() < steps.length - 1 ? 'Next' : 'Let’s go' }}
+    </ion-button>
+  </div>
+</ion-content>

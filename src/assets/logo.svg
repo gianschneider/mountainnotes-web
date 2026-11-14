@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Back peak (light), front peak (dark) and a note pin standing on the front summit -->
+  <path d="M4 106 L40 52 L72 106 Z" fill="#6f9a7b"/>
+  <path d="M30 106 L76 42 L116 106 Z" fill="#2e5e3e"/>
+  <path d="M76 42 C76 42 60 30 60 19 C60 10 67 4 76 4 C85 4 92 10 92 19 C92 30 76 42 76 42 Z" fill="#e8772e"/>
+  <circle cx="76" cy="19" r="6" fill="#ffffff"/>
+</svg>

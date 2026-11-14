@@ -1,0 +1,19 @@
+# Web app on the Raspberry Pi: nginx serves www/ on 127.0.0.1:8081,
+# Tailscale Funnel publishes it as https://<pi>.ts.net:10000 (the API stays on :8443).
+name: mountainnotes-web
+
+services:
+  web:
+    image: nginx:1.29-alpine
+    container_name: MountainNotes-web
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "127.0.0.1:8081:80"

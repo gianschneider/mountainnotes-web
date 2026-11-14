@@ -1,0 +1,35 @@
+.legend-pin {
+  margin: 4px 16px 4px 4px;
+}
+
+// Same look as the position dot on the map
+.me {
+  width: 28px;
+  height: 28px;
+  margin: 4px 16px 4px 4px;
+  border-radius: 50%;
+  background: rgba(56, 128, 255, 0.2);
+  border: 1px solid #3880ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #3880ff;
+    border: 2px solid #fff;
+  }
+}
+
+// Same red as the building zones on the map
+.zone-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  margin-left: 4px;
+  vertical-align: middle;
+  border: 1px solid #eb445a;
+  background: rgba(235, 68, 90, 0.2);
+}

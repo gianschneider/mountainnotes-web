@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Groups</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="create()" aria-label="Create group">
+        <ion-icon slot="icon-only" name="add" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="view()" (ionChange)="setView($any($event.detail.value))">
+      <ion-segment-button value="mine"><ion-label>Mine</ion-label></ion-segment-button>
+      <ion-segment-button value="discover"><ion-label>Discover</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="reload($any($event))">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  @if (offline()) {
+    <ion-text color="medium"><p class="ion-padding-horizontal">Offline: saved state.</p></ion-text>
+  }
+
+  @if (view() === 'mine') {
+    @if (groupsService.groups().length) {
+      <ion-list>
+        @for (group of groupsService.groups(); track group.id) {
+          <ion-item [routerLink]="['/tabs/groups', group.id]" [detail]="true">
+            <ion-label>
+              <h2>{{ group.name }}</h2>
+              <p>
+                {{ group.memberCount }} {{ group.memberCount === 1 ? 'member' : 'members' }}
+                · {{ group.joinPolicy === 'open' ? 'open' : 'on request' }}
+              </p>
+            </ion-label>
+            @if (group.pendingRequests) {
+              <ion-badge slot="end" color="warning">{{ group.pendingRequests }} {{ group.pendingRequests === 1 ? 'request' : 'requests' }}</ion-badge>
+            }
+            @if (group.role === 'admin') {
+              <ion-badge slot="end" color="medium">Admin</ion-badge>
+            }
+          </ion-item>
+        }
+      </ion-list>
+    } @else {
+      <ion-text color="medium">
+        <p class="ion-padding">
+          You are not in a group yet. Create a group for your rope team, search under «Discover» or join
+          with an invite code.
+        </p>
+      </ion-text>
+    }
+
+    <div class="ion-padding">
+      <ion-button expand="block" (click)="create()">
+        <ion-icon slot="start" name="add" /> Create group
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="join()">
+        <ion-icon slot="start" name="enter-outline" /> Join with code
+      </ion-button>
+    </div>
+  } @else {
+    <ion-searchbar placeholder="Search groups" [debounce]="300" (ionInput)="search($any($event).detail.value ?? '')" />
+    <ion-list>
+      @for (group of directory(); track group.id) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ group.name }}</h2>
+            <p>
+              {{ group.memberCount }} {{ group.memberCount === 1 ? 'member' : 'members' }}
+              · {{ group.joinPolicy === 'open' ? 'open' : 'join on request' }}
+            </p>
+          </ion-label>
+          <ion-button slot="end" size="small" [fill]="group.myRole || group.requested ? 'outline' : 'solid'"
+            (click)="directoryAction(group)">
+            {{ actionLabel(group) }}
+          </ion-button>
+        </ion-item>
+      } @empty {
+        <ion-item lines="none"><ion-note>No groups found.</ion-note></ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

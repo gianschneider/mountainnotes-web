@@ -1,0 +1,104 @@
+.meta {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.body {
+  white-space: pre-wrap;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.locked {
+  text-align: center;
+  margin-top: 16px;
+
+  ion-icon {
+    font-size: 48px;
+    color: var(--ion-color-medium);
+  }
+
+  ion-button {
+    margin-top: 16px;
+  }
+}
+
+.arrow {
+  transition: transform 0.2s linear;     // smooth turning with the compass
+}
+
+.compass-hint {
+  display: block;
+  margin: 6px 0 12px;
+  font-size: 0.85em;
+}
+
+.locked ion-button ion-icon {
+  font-size: 18px;                        // not the big state icon
+  color: inherit;
+}
+
+.edit {
+  margin-top: 32px;
+}
+
+.delete {
+  margin-top: 8px;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  max-height: 40vh;                       // text and photo fit without scrolling
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.photo-missing {
+  display: block;
+  margin-bottom: 16px;
+}
+
+// Tiny preview scaled up and blurred: shows colours only, the content stays hidden until the note is opened
+.photo-teaser {
+  position: relative;
+  height: 160px;
+  margin-top: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(14px);
+    transform: scale(1.2);              // hide the blurred, transparent edges
+  }
+
+  span {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 10px 12px;
+    color: #fff;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+    font-size: 0.95em;
+  }
+}
+
+.opens {
+  margin-top: 12px;
+  border-radius: 12px;
+  background: var(--ion-color-light);
+
+  ion-item {
+    --background: transparent;
+    --min-height: 40px;
+  }
+
+  ion-list-header {
+    min-height: 32px;
+    font-size: 0.95em;
+  }
+}

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile" text="Profile" />
+    </ion-buttons>
+    <ion-title>Offline maps</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (region of regions(); track region.id) {
+      <ion-item>
+        <ion-label>
+          <h2>{{ region.name }}</h2>
+          <p>{{ region.bytes / 1e6 | number: '1.0-1' }}&nbsp;MB · saved on {{ region.createdAt | date: 'dd.MM.yyyy' }}</p>
+        </ion-label>
+        <ion-button slot="end" fill="clear" color="danger" (click)="remove(region)" aria-label="Delete">
+          <ion-icon slot="icon-only" name="trash-outline" />
+        </ion-button>
+      </ion-item>
+    } @empty {
+      <ion-item lines="none">
+        <ion-note class="ion-text-wrap">No areas saved yet.</ion-note>
+      </ion-item>
+    }
+  </ion-list>
+  @if (regions().length) {
+    <p class="ion-padding-horizontal"><ion-note>Total {{ totalMb() | number: '1.0-1' }}&nbsp;MB</ion-note></p>
+  }
+  <p class="ion-padding-horizontal">
+    <ion-note>
+      To save an area: set the map view (up to about 40 km) and tap
+      <ion-icon name="cloud-download-outline" />. The map, notes and building zones are saved,
+      so you have everything on the way without network.
+    </ion-note>
+  </p>
+</ion-content>

@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>Account</ion-list-header>
+    <ion-item>
+      <ion-icon slot="start" name="person-circle-outline" color="primary" />
+      <ion-label>{{ auth.user()?.username }}</ion-label>
+      @if (auth.user()?.isTest) {
+        <ion-badge slot="end" color="warning">Test account</ion-badge>
+      }
+      @if (auth.user()?.role === 'admin') {
+        <ion-badge slot="end" color="medium">Admin</ion-badge>
+      }
+    </ion-item>
+    <ion-item [button]="true" [detail]="true" (click)="changePassword()">
+      <ion-icon slot="start" name="key-outline" color="primary" />
+      <ion-label>Change password</ion-label>
+    </ion-item>
+    <ion-item routerLink="/tabs/profile/notes" [detail]="true">
+      <ion-icon slot="start" name="book-outline" color="primary" />
+      <ion-label>My notes</ion-label>
+    </ion-item>
+    <ion-item routerLink="/tabs/profile/maps" [detail]="true">
+      <ion-icon slot="start" name="map-outline" color="primary" />
+      <ion-label>Offline maps</ion-label>
+    </ion-item>
+    <ion-item [button]="true" [detail]="true" (click)="showIntro()">
+      <ion-icon slot="start" name="help-circle-outline" color="primary" />
+      <ion-label>Introduction</ion-label>
+    </ion-item>
+    @if (auth.user()?.role === 'admin') {
+      <ion-item routerLink="/tabs/profile/admin" [detail]="true">
+        <ion-icon slot="start" name="shield-checkmark-outline" color="primary" />
+        <ion-label>Administration</ion-label>
+      </ion-item>
+    }
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Data sources</ion-list-header>
+    <ion-item lines="none"><ion-note>Base map: © swisstopo</ion-note></ion-item>
+    <ion-item lines="none"><ion-note>Building zones (settlement mask): Kantonale Raumplanungsfachstellen, INFOPLAN-ARE, as of 2022</ion-note></ion-item>
+  </ion-list>
+
+  @if (auth.user()?.role === 'admin' || auth.user()?.isTest) {
+    <ion-list>
+      <ion-list-header>Developer</ion-list-header>
+      @if (auth.user()?.isTest) {
+        <ion-item [button]="true" [detail]="false" (click)="resetDemo()">
+          <ion-icon slot="start" name="refresh-outline" color="primary" />
+          <ion-label>
+            Reset demo
+            <p>Lock opened notes again (test accounts only)</p>
+          </ion-label>
+        </ion-item>
+      }
+      <ion-item>
+        <ion-input label="API-URL" labelPlacement="stacked" name="apiUrl" [(ngModel)]="apiUrl" type="url"
+          autocapitalize="off" helperText="Leave empty for the default (Pi)" />
+      </ion-item>
+      @if (serverStatus(); as status) {
+        <ion-item lines="none"><ion-note>{{ status }}</ion-note></ion-item>
+      }
+      <ion-item lines="none">
+        <ion-button fill="outline" size="default" (click)="testServer()">Save and test</ion-button>
+      </ion-item>
+    </ion-list>
+  }
+
+  <div class="ion-padding">
+    <ion-button expand="block" fill="outline" color="danger" (click)="logout()">
+      <ion-icon slot="start" name="log-out-outline" /> Log out
+    </ion-button>
+    <ion-button class="delete-account" expand="block" fill="clear" color="danger" size="small" (click)="deleteAccount()">
+      <ion-icon slot="start" name="trash-outline" /> Delete account
+    </ion-button>
+  </div>
+</ion-content>

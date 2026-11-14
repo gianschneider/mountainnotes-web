@@ -1,0 +1,115 @@
+<ion-content [scrollY]="false">
+  <div #map class="map"></div>
+
+  <div class="zoom-buttons">
+    <ion-fab-button size="small" color="light" (click)="zoomIn()" aria-label="Zoom in">
+      <ion-icon name="add" />
+    </ion-fab-button>
+    <ion-fab-button size="small" color="light" (click)="zoomOut()" aria-label="Zoom out">
+      <ion-icon name="remove" />
+    </ion-fab-button>
+  </div>
+
+  <div class="top">
+    <div class="status">
+      @if (location.error(); as err) {
+        <ion-chip color="danger">{{ err }}</ion-chip>
+      } @else if (location.position(); as p) {
+        <ion-chip>
+          <ion-icon name="navigate" />
+          ±&nbsp;{{ p.coords.accuracy | number: '1.0-0' }}&nbsp;m
+        </ion-chip>
+      } @else {
+        <ion-chip>Finding position …</ion-chip>
+      }
+      @if (outbox.pendingCount(); as n) {
+        <ion-chip color="warning" (click)="outbox.sync()">
+          <ion-icon name="cloud-upload-outline" />
+          {{ n }} {{ n === 1 ? 'note waits' : 'notes wait' }} for upload
+        </ion-chip>
+      }
+      @if (filter.active()) {
+        <ion-chip color="secondary" (click)="filter.reset()">
+          <ion-icon name="funnel" />
+          Filter on
+          <ion-icon name="close-circle" />
+        </ion-chip>
+      }
+      <ion-fab-button class="help" size="small" color="light" (click)="openLegend()" aria-label="Filter and legend">
+        <ion-icon [name]="filter.active() ? 'funnel' : 'help'" />
+      </ion-fab-button>
+    </div>
+    @if (canLoadView()) {
+      <ion-button class="load-area" size="small" shape="round" (click)="loadView()" [disabled]="loadingView()">
+        @if (loadingView()) {
+          <ion-spinner slot="start" name="crescent" />
+        } @else {
+          <ion-icon slot="start" name="refresh" />
+        }
+        Load notes in this area
+      </ion-button>
+    }
+  </div>
+
+  @if (download(); as d) {
+    <div class="place-panel">
+      <p>Saving map … {{ d.done }} / {{ d.total }}</p>
+      <ion-progress-bar [value]="d.total ? d.done / d.total : 0" />
+      <div class="actions">
+        <ion-button fill="outline" color="medium" (click)="cancelDownload()">Cancel</ion-button>
+      </div>
+    </div>
+  } @else if (placing()) {
+    <div class="place-panel">
+      <p>Drag the marker to the exact spot (max. {{ maxAdjust }} m from the GNSS fix).</p>
+      <p class="meta">
+        Moved: {{ adjustM() | number: '1.0-0' }}&nbsp;m · GNSS ±&nbsp;{{ anchorAccuracy() | number: '1.0-0' }}&nbsp;m
+      </p>
+      @if (!accuracyOk()) {
+        <ion-text color="warning">
+          <p>GNSS too inaccurate (over {{ maxAccuracy }} m). Wait a moment or move into the open.</p>
+        </ion-text>
+      }
+      @switch (settlementCheck()) {
+        @case ('inside') {
+          @if (isAdmin()) {
+            <ion-text color="warning">
+              <p>Building zone (red): as an admin you may still place a note here for testing.</p>
+            </ion-text>
+          } @else {
+            <ion-text color="danger">
+              <p>This is a building zone (red). Notes cannot be placed in settlements.</p>
+            </ion-text>
+          }
+        }
+        @case ('unknown') {
+          <p class="meta">Settlement boundaries for this area are not loaded yet; the server checks on upload.</p>
+        }
+      }
+      <div class="actions">
+        <ion-button fill="outline" color="medium" (click)="cancelPlacing()">Cancel</ion-button>
+        <ion-button (click)="openForm()" [disabled]="!canContinue()">Next</ion-button>
+      </div>
+    </div>
+  } @else {
+    <ion-button class="nearby-button" shape="round" color="light" (click)="openNearby()">
+      <ion-icon slot="start" name="list" />
+      Nearby
+      @if (notesService.notes().length; as n) {
+        <ion-badge>{{ n }}</ion-badge>
+      }
+    </ion-button>
+    <div class="map-buttons">
+      <ion-fab-button size="small" color="light" (click)="saveOffline()" aria-label="Save area for offline use">
+        <ion-icon name="cloud-download-outline" />
+      </ion-fab-button>
+      <ion-fab-button size="small" [color]="following() ? 'primary' : 'light'" (click)="centerOnMe()" [disabled]="!location.position()"
+        [attr.aria-label]="following() ? 'Map follows you' : 'Centre on me (double tap: follow me)'">
+        <ion-icon name="locate" />
+      </ion-fab-button>
+      <ion-fab-button (click)="startPlacing()" [disabled]="!location.position()" aria-label="Place note">
+        <ion-icon name="add" />
+      </ion-fab-button>
+    </div>
+  }
+</ion-content>

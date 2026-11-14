@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>MountainNote</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (note(); as n) {
+    <ion-note class="meta">
+      from <strong>{{ n.author }}</strong> · for {{ n.audienceLabel ?? 'everyone' }}
+      · visible until {{ n.validUntil | date: 'dd.MM.yyyy' }}
+    </ion-note>
+
+    @switch (state()?.kind) {
+      @case ('readable') {
+        <div class="body">{{ n.body }}</div>
+        @if (n.hasPhoto) {
+          @if (photo(); as url) {
+            <img class="photo" [src]="url" alt="Photo of the note" />
+          } @else if (photo() === null) {
+            <ion-note class="photo-missing">The photo is not available offline. It loads as soon as you have network again.</ion-note>
+          }
+        }
+        @if (n.isMine) {
+          <ion-note>Your note · opened {{ n.openCount ?? 0 }}× on the spot</ion-note>
+          @if (opens()?.length) {
+            <ion-list class="opens" lines="none">
+              <ion-list-header>Opened by</ion-list-header>
+              @for (o of opens(); track o.username) {
+                <ion-item>
+                  <ion-icon slot="start" name="person-circle-outline" color="medium" />
+                  <ion-label>{{ o.username }}</ion-label>
+                  <ion-note slot="end">{{ o.openedAt | date: 'dd.MM.yy, HH:mm' }}</ion-note>
+                </ion-item>
+              }
+            </ion-list>
+          }
+        } @else if (openedAt(); as at) {
+          <ion-note>Opened on {{ at | date: 'dd.MM.yyyy, HH:mm' }}</ion-note>
+        } @else {
+          <ion-note>Already opened</ion-note>
+        }
+      }
+      @case ('future') {
+        <div class="locked">
+          <ion-icon name="time" />
+          <p>Readable from {{ $any(state()).from | date: 'dd.MM.yyyy, HH:mm' }}</p>
+        </div>
+      }
+      @case ('nofix') {
+        <div class="locked"><ion-icon name="locate" /><p>Waiting for your position …</p></div>
+      }
+      @case ('far') {
+        <div class="locked">
+          @if (bearing(); as deg) {
+            <ion-icon name="navigate" color="primary" class="arrow" [style.transform]="arrowRotation(deg, compass.heading())" />
+            <p><strong>{{ formatDistance($any(state()).distance) }}</strong> to go, towards {{ compassPoint(deg) }}</p>
+            @if (compass.state() === 'off') {
+              <ion-button size="small" fill="outline" (click)="compass.enable()">
+                <ion-icon slot="start" name="compass-outline" /> Turn on compass
+              </ion-button>
+              <ion-note class="compass-hint">Without the compass the arrow points with north up.</ion-note>
+            } @else if (compass.state() === 'denied') {
+              <ion-note class="compass-hint">Compass not allowed: arrow with north up.</ion-note>
+            }
+          } @else {
+            <ion-icon name="lock-closed" />
+            <p><strong>{{ formatDistance($any(state()).distance) }}</strong> away.</p>
+          }
+          <ion-note>Get within {{ n.unlockRadius }} m to open the note.</ion-note>
+        </div>
+      }
+      @case ('inaccurate') {
+        <div class="locked">
+          <ion-icon name="lock-closed" />
+          <p>You are there, but GNSS is too inaccurate (±&nbsp;{{ $any(state()).accuracy | number: '1.0-0' }}&nbsp;m).</p>
+          <ion-note>At most {{ maxAccuracy }} m is needed. Wait a moment or move into the open.</ion-note>
+        </div>
+      }
+      @case ('steady') {
+        <div class="locked">
+          <ion-icon name="lock-closed" />
+          <p>Stand still for a moment … ({{ $any(state()).fixes }}/{{ fixesNeeded }})</p>
+        </div>
+      }
+      @case ('unlockable') {
+        <div class="locked">
+          <ion-icon name="lock-open" color="success" />
+          <p>You are at the note's spot.</p>
+          <ion-button expand="block" color="success" (click)="open()">Open note</ion-button>
+        </div>
+      }
+    }
+
+    @if (n.hasPhoto && n.photoPreview && state()?.kind !== 'readable') {
+      <div class="photo-teaser">
+        <img [src]="n.photoPreview" alt="" />
+        <span><ion-icon name="camera" /> Contains a photo: open the note on the spot to see it.</span>
+      </div>
+    }
+
+    @if (n.isMine) {
+      <ion-button class="edit" expand="block" fill="outline" (click)="edit()">
+        <ion-icon slot="start" name="create-outline" /> Edit
+      </ion-button>
+    }
+    @if (canDelete()) {
+      <ion-button class="delete" expand="block" fill="outline" color="danger" (click)="remove()">
+        <ion-icon slot="start" name="trash-outline" /> Delete note
+      </ion-button>
+    }
+  } @else {
+    <ion-text color="medium"><p>This note no longer exists.</p></ion-text>
+  }
+</ion-content>

@@ -1,0 +1,79 @@
+// MountainNotes theme "Alpingrün" (light only, decision 04.11.2026).
+// Colours: https://ionicframework.com/docs/theming/colors
+
+:root {
+  // fir green: main colour
+  --ion-color-primary: #2e5e3e;
+  --ion-color-primary-rgb: 46, 94, 62;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #285337;
+  --ion-color-primary-tint: #436e51;
+
+  // signal orange: "open now"
+  --ion-color-secondary: #e8772e;
+  --ion-color-secondary-rgb: 232, 119, 46;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #cc6928;
+  --ion-color-secondary-tint: #ea8543;
+
+  // glacier blue
+  --ion-color-tertiary: #4a6fa5;
+  --ion-color-tertiary-rgb: 74, 111, 165;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #416291;
+  --ion-color-tertiary-tint: #5c7dae;
+
+  --ion-color-success: #3a8f5c;
+  --ion-color-success-rgb: 58, 143, 92;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #337e51;
+  --ion-color-success-tint: #4e9a6c;
+
+  --ion-color-warning: #e5a50a;
+  --ion-color-warning-rgb: 229, 165, 10;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #ca9109;
+  --ion-color-warning-tint: #e8ae22;
+
+  // Swiss red
+  --ion-color-danger: #c8102e;
+  --ion-color-danger-rgb: 200, 16, 46;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #b00e28;
+  --ion-color-danger-tint: #ce2843;
+
+  // slate: locked notes
+  --ion-color-dark: #2f3437;
+  --ion-color-dark-rgb: 47, 52, 55;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #292e30;
+  --ion-color-dark-tint: #44484b;
+
+  --ion-color-medium: #7a8288;
+  --ion-color-medium-rgb: 122, 130, 136;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #6b7278;
+  --ion-color-medium-tint: #878e94;
+
+  --ion-color-light: #f4f5f2;
+  --ion-color-light-rgb: 244, 245, 242;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d7d8d5;
+  --ion-color-light-tint: #f5f6f3;
+
+  // Branded headers, neutral tab bar with the main colour for the active tab
+  --ion-toolbar-background: var(--ion-color-primary);
+  --ion-toolbar-color: var(--ion-color-primary-contrast);
+  --ion-toolbar-segment-color: rgba(255, 255, 255, 0.8);
+  --ion-toolbar-segment-color-checked: var(--ion-color-primary);
+  --ion-tab-bar-color-selected: var(--ion-color-primary);
+}
