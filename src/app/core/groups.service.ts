@@ -50,9 +50,13 @@ export function formatInviteCode(code: string): string {
   return code.replace(/^(.{4})(.+)$/, '$1-$2');
 }
 
+/** Short, shareable address of the web app. */
+export const SHORT_LINK = 'https://gianschneider.github.io/mountainnotes/';
+
 export function inviteLink(code: string): string {
-  // Web app: a normal link to this site; the app reads ?join= on start (see AppComponent).
-  return `${location.origin}${location.pathname}?join=${encodeURIComponent(code)}`;
+  // Short link (GitHub Pages, repo gianschneider/mountainnotes) forwards to the web app with ?join= kept;
+  // the app reads it on start (see AppComponent).
+  return `${SHORT_LINK}?join=${encodeURIComponent(code)}`;
 }
 
 /**
