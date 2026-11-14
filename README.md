@@ -8,7 +8,7 @@ Course project, module *Advanced Spatial Methods*, FHNW, autumn 2026.
 
 ## Use
 
-Open **https://gianschneider.github.io/mountainnotes** on the phone (short link, forwards to
+Open **https://mountainnotes.pages.dev** on the phone (short link, forwards to
 https://raspberry-5-gian-schneider.tailec4975.ts.net:10000), then add it to the home screen:
 
 - **iPhone (Safari):** Share button → *Add to Home Screen*
