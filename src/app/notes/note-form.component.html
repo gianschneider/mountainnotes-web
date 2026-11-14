@@ -16,6 +16,7 @@
   </ion-list>
 
   <div class="photo">
+    <input #fileInput type="file" accept="image/*" hidden (change)="onPhotoPicked($event)" />
     @if (photoUrl(); as url) {
       <div class="photo-preview">
         <img [src]="url" alt="Photo of the note" />

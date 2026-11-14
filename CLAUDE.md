@@ -27,7 +27,7 @@ Die beiden Konzept-Dateien liegen neben dem Repo im Ordner `LBS_project/Konzept`
 ## Technik
 
 - Ionic 9, Angular (standalone components, signals), MapLibre/Leaflet mit swisstopo Basiskarte, Turf.js
-- Capacitor-Plugins laufen hier mit ihrer **Web-Implementierung** (Preferences → localStorage, Filesystem → IndexedDB, Geolocation → Browser, Camera → Datei-Input mit `webUseInput`)
+- Capacitor-Plugins laufen hier mit ihrer **Web-Implementierung** (Preferences → localStorage, Filesystem → IndexedDB, Geolocation → Browser, Fotos über ein eigenes `<input type="file" accept="image/*">` (kein Kamera-Plugin))
 - PWA: `src/manifest.webmanifest`, Angular Service Worker (`ngsw-config.json`, nur Produktions-Build) cacht die App-Hülle; Notes, Outbox und Karten haben ihren eigenen Offline-Speicher
 - Hosting: `sh deploy.sh` baut und kopiert `www/` auf den Pi (nginx-Container `hosting/`, `127.0.0.1:8081`), Tailscale Funnel veröffentlicht ihn auf Port 10000. API bleibt auf Port 8443.
 - Immer `coords.accuracy` berücksichtigen; Radien nicht unter 20 m; Geofencing nur im Vordergrund

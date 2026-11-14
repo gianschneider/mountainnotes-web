@@ -1,18 +1,17 @@
-import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonList, IonItem, IonTextarea, IonInput,
   IonSegment, IonSegmentButton, IonLabel, IonSelect, IonSelectOption, IonNote, IonText, IonListHeader, IonToggle,
-  IonIcon, IonSpinner, ModalController, ActionSheetController,
+  IonIcon, IonSpinner, ModalController,
 } from '@ionic/angular';
 import { GroupsService } from '../core/groups.service';
 import { ApiService } from '../core/api.service';
 import { Audience, DEFAULT_UNLOCK_RADIUS_M, DEFAULT_VALIDITY_YEARS, NewNote, SyncedNote, UNLOCK_RADIUS_OPTIONS, uuidv4 } from '../core/note';
 import { LatLon } from '../core/geo';
 import { NotePhoto, jpegDataUrl, preparePhoto } from '../core/photo';
-import { Camera, MediaResult } from '@capacitor/camera';
 import { addIcons } from 'ionicons';
 import { cameraOutline, closeCircle } from 'ionicons/icons';
 import { Ui } from '../core/ui';
@@ -79,7 +78,6 @@ export class NoteFormComponent implements OnInit {
 
   private modals = inject(ModalController);
   private api = inject(ApiService);
-  private actionSheets = inject(ActionSheetController);
   private ui = inject(Ui);
   readonly groups = inject(GroupsService).groups;
 
@@ -129,40 +127,31 @@ export class NoteFormComponent implements OnInit {
     addIcons({ cameraOutline, closeCircle });
   }
 
-  /** Take a photo or pick one; it is resized and stripped of EXIF before it is stored. */
-  async addPhoto() {
-    const sheet = await this.actionSheets.create({
-      header: 'Photo for the note',
-      buttons: [
-        { text: 'Take photo', data: 'camera' },
-        { text: 'From the photo library', data: 'gallery' },
-        { text: 'Cancel', role: 'cancel' },
-      ],
-    });
-    await sheet.present();
-    const source = (await sheet.onDidDismiss()).data as 'camera' | 'gallery' | undefined;
-    if (!source) return;
+  private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
 
-    // Camera API 8: takePhoto / chooseFromGallery (getPhoto is deprecated). The plugin scales to ~1600 px.
-    const size = { quality: 85, targetWidth: 1600, targetHeight: 1600, correctOrientation: true, webUseInput: true };
+  /**
+   * Web app: open the phone's own picker (iOS and Android offer "Take photo" and the photo library there).
+   * The click must happen right in the tap handler, otherwise browsers (Safari above all) block the picker.
+   */
+  addPhoto() {
+    const input = this.fileInput().nativeElement;
+    input.value = '';   // picking the same file again must fire "change" too
+    input.click();
+  }
+
+  /** The photo is resized and stripped of EXIF (incl. GPS) before it is stored. */
+  async onPhotoPicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    this.photoBusy.set(true);
     try {
-      const media: MediaResult | undefined = source === 'camera'
-        ? await Camera.takePhoto(size)
-        : (await Camera.chooseFromGallery({ ...size, limit: 1 })).results[0];
-      const src = media?.webPath ?? (media?.thumbnail ? `data:image/jpeg;base64,${media.thumbnail}` : null);
-      if (!src) return;
-      this.photoBusy.set(true);
-      this.photo.set(await preparePhoto(src));
+      this.photo.set(await preparePhoto(url));
     } catch (err) {
-      // Cancelling the picker also rejects; only show real problems, with the reason.
-      const message = err instanceof Error ? err.message : String(err);
       console.error('Photo failed', err);
-      if (/cancel/i.test(message)) return;
-      const hint = /not available|not implemented/i.test(message) ? 'There is no camera here. Use the photo library.'
-        : /denied|permission|access/i.test(message) ? 'No access. Allow the camera for this site in the browser settings.'
-        : `The photo could not be added (${message}).`;
-      this.ui.toast(hint, 'danger');
+      this.ui.toast('The photo could not be read. Please choose a JPEG or PNG photo.', 'danger');
     } finally {
+      URL.revokeObjectURL(url);
       this.photoBusy.set(false);
     }
   }
